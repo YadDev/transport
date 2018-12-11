@@ -14,8 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
-import com.transport.admin.service.LoginService;
-import com.transport.beans.admin.UserCredential;
+import com.transport.admin.entity.UserCredential;
+import com.transport.admin.service.LoginServiceImpl;
 
 
 public class CommonUtils {
@@ -72,7 +72,7 @@ public class CommonUtils {
 		return sb.toString();
 	}
 	
-	public static String validateUserHeader(LoginService userService,HttpServletRequest request) {
+	public static String validateUserHeader(LoginServiceImpl userService,HttpServletRequest request) {
 		String response=null;
 		try {
 			HttpSession session=request.getSession();
@@ -85,7 +85,7 @@ public class CommonUtils {
 					String sessionID=application.get(userName);
 					UserCredential user=userService.findByUserName(userName);
 					
-					if(session.getAttribute(""+user.getGetUserId())!=null && sessionID.equals(session.getAttribute(""+user.getGetUserId()).toString())) {
+					if(session.getAttribute(""+user.getUserId())!=null && sessionID.equals(session.getAttribute(""+user.getUserId()).toString())) {
 						response="01";
 					}
 					else {

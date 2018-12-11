@@ -1,19 +1,15 @@
 package com.transport.admin.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import javax.servlet.http.HttpServletRequest;
 
-import com.transport.admin.dao.LoginDAO;
-import com.transport.beans.admin.UserCredential;
+import com.transport.admin.entity.UserCredential;
+import com.transport.beans.admin.RespResult;
 
-@Service
-public class LoginService implements ILoginService {
+public interface LoginService {
 
-	@Autowired
-	private LoginDAO loginDAO;
-	@Override
-	public UserCredential findByUserName(String userName) {
-		return loginDAO.findByUserName(userName);
-	}
-
+	public UserCredential findByUserName(String userName);
+	
+	public RespResult authenticateUser(UserCredential userCredential, HttpServletRequest request) throws Exception;
+	
+	public RespResult loggoffUser(String userName) throws Exception;
 }
