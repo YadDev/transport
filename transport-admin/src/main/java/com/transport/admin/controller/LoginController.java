@@ -16,18 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.transport.admin.entity.UserCredential;
 import com.transport.admin.service.LoginServiceImpl;
-import com.transport.beans.admin.RespResult;
-import com.transport.util.CommonUtils;
+import com.transport.beans.admin.BaseResponse;
+import com.transport.util.commons.CommonUtils;
 
 @RestController
 public class LoginController {
 	@Autowired
 	private LoginServiceImpl loginService;
-
+	
 	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
 	HttpSession session = null;
-	RespResult response = null;
+	BaseResponse response = null;
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = { "/", "/login" }, method = RequestMethod.POST)
 	public ResponseEntity<Object> login(@RequestBody UserCredential userCredential, HttpServletRequest request) {

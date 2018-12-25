@@ -1,4 +1,4 @@
-package com.transport.admin.config;
+package com.transport.config;
 
 
 import javax.sql.DataSource;
