@@ -1,6 +1,6 @@
 package com.transport.beans.admin;
 
-public class RespResult {
+public class BaseResponse {
 
 	private String respCode;
 	private Object respData;

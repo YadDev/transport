@@ -1,4 +1,4 @@
-package com.transport.util;
+package com.transport.util.commons;
 
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -72,8 +72,8 @@ public class CommonUtils {
 		return sb.toString();
 	}
 	
-	public static String validateUserHeader(LoginServiceImpl userService,HttpServletRequest request) {
-		String response=null;
+	public static boolean validateUserHeader(LoginServiceImpl userService,HttpServletRequest request) {
+		boolean response=false;
 		try {
 			HttpSession session=request.getSession();
 			ServletContext sc = session.getServletContext();
@@ -86,18 +86,18 @@ public class CommonUtils {
 					UserCredential user=userService.findByUserName(userName);
 					
 					if(session.getAttribute(""+user.getUserId())!=null && sessionID.equals(session.getAttribute(""+user.getUserId()).toString())) {
-						response="01";
+						response=true;
 					}
 					else {
-						response="02";
+						response=true;
 					}
 				}else {
-					response="03";
+					response=false;
 				}
 				
 			}
 		}catch (Exception e) {
-			response="04";
+			response=false;
 		}
 		return response;
 	}
