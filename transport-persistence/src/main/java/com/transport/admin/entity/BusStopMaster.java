@@ -7,8 +7,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 @Entity
 @Table(name="mst_bus_Stop")
+
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString
 public class BusStopMaster {
 	
 	@Id
@@ -33,71 +41,4 @@ public class BusStopMaster {
 	
 	@Column(name="bus_stop_state_code")
 	private String busStopState;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getBusStopName() {
-		return busStopName;
-	}
-
-	public void setBusStopName(String busStopName) {
-		this.busStopName = busStopName;
-	}
-
-	public String getBusStopCode() {
-		return busStopCode;
-	}
-
-	public void setBusStopCode(String busStopCode) {
-		this.busStopCode = busStopCode;
-	}
-
-	public String getBusStopAdd() {
-		return busStopAdd;
-	}
-
-	public void setBusStopAdd(String busStopAdd) {
-		this.busStopAdd = busStopAdd;
-	}
-
-	public String getLattitude() {
-		return lattitude;
-	}
-
-	public void setLattitude(String lattitude) {
-		this.lattitude = lattitude;
-	}
-
-	public String getLongitude() {
-		return longitude;
-	}
-
-	public void setLongitude(String longitude) {
-		this.longitude = longitude;
-	}
-
-	public String getBusStopState() {
-		return busStopState;
-	}
-
-	public void setBusStopState(String busStopState) {
-		this.busStopState = busStopState;
-	}
-
-	@Override
-	public String toString() {
-		return "BusStopMaster [id=" + id + ", busStopName=" + busStopName + ", busStopCode=" + busStopCode
-				+ ", busStopAdd=" + busStopAdd + ", lattitude=" + lattitude + ", longitude=" + longitude
-				+ ", busStopState=" + busStopState + "]";
-	}
-	
-	
-	
-
 }

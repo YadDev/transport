@@ -9,8 +9,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 @Entity
 @Table(name="mst_user")
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString
 public class UserCredential {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,85 +49,5 @@ public class UserCredential {
 	@Column(name="user_last_updated")
 	private Timestamp updatedDate;
 
-	public Integer getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Integer userId) {
-		this.userId = userId;
-	}
-
-	public String getUser() {
-		return user;
-	}
-
-	public void setUser(String user) {
-		this.user = user;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public Integer getRoleID() {
-		return roleID;
-	}
-
-	public void setRoleID(Integer roleID) {
-		this.roleID = roleID;
-	}
-
-	public Integer getUserStatus() {
-		return userStatus;
-	}
-
-	public void setUserStatus(Integer userStatus) {
-		this.userStatus = userStatus;
-	}
-
-	public Integer getClientID() {
-		return clientID;
-	}
-
-	public void setClientID(Integer clientID) {
-		this.clientID = clientID;
-	}
-
-	public Integer getCreatedBy() {
-		return createdBy;
-	}
-
-	public void setCreatedBy(Integer createdBy) {
-		this.createdBy = createdBy;
-	}
-
-	public Timestamp getUpdatedDate() {
-		return updatedDate;
-	}
-
-	public void setUpdatedDate(Timestamp updatedDate) {
-		this.updatedDate = updatedDate;
-	}
-
-	@Override
-	public String toString() {
-		return "UserCredential [userId=" + userId + ", user=" + user + ", userName=" + userName + ", password="
-				+ password + ", roleID=" + roleID + ", userStatus=" + userStatus + ", clientID=" + clientID
-				+ ", createdBy=" + createdBy + ", updatedDate=" + updatedDate + "]";
-	}
-	
-	
-	
+		
 }

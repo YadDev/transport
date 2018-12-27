@@ -7,8 +7,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 @Entity
 @Table(name="mst_menu")
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString
 public class MenuMaster {
 
 	@Id
@@ -27,38 +34,4 @@ public class MenuMaster {
 	
 	@Column(name="menu_shortcut_key")
 	private String pageShortCut;
-	
-	public Integer getPageID() {
-		return pageID;
-	}
-	public void setPageID(Integer pageID) {
-		this.pageID = pageID;
-	}
-	public String getPageName() {
-		return pageName;
-	}
-	public void setPageName(String pageName) {
-		this.pageName = pageName;
-	}
-	public Integer getPageSeq() {
-		return pageSeq;
-	}
-	public void setPageSeq(Integer pageSeq) {
-		this.pageSeq = pageSeq;
-	}
-	public String getPageLink() {
-		return pageLink;
-	}
-	public void setPageLink(String pageLink) {
-		this.pageLink = pageLink;
-	}
-	public String getPageShortCut() {
-		return pageShortCut;
-	}
-	public void setPageShortCut(String pageShortCut) {
-		this.pageShortCut = pageShortCut;
-	}
-	
-	
-	
 }

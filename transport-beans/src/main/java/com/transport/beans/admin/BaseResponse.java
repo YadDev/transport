@@ -1,21 +1,16 @@
 package com.transport.beans.admin;
 
-public class BaseResponse {
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter 
+@Setter
+@ToString
+public class BaseResponse {
 	private String respCode;
+	private String respMessage;
 	private Object respData;
 	
-	public String getRespCode() {
-		return respCode;
-	}
-	public void setRespCode(String respCode) {
-		this.respCode = respCode;
-	}
-	public Object getRespData() {
-		return respData;
-	}
-	public void setRespData(Object respData) {
-		this.respData = respData;
-	}
 	
 }

@@ -18,6 +18,7 @@ import com.transport.admin.entity.UserCredential;
 import com.transport.admin.service.LoginServiceImpl;
 import com.transport.beans.admin.BaseResponse;
 import com.transport.util.commons.CommonUtils;
+import com.transport.util.commons.StringsUtils;
 
 @RestController
 public class LoginController {
@@ -28,21 +29,23 @@ public class LoginController {
 
 	HttpSession session = null;
 	BaseResponse response = null;
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = { "/", "/login" }, method = RequestMethod.POST)
 	public ResponseEntity<Object> login(@RequestBody UserCredential userCredential, HttpServletRequest request) {
 		logger.info("********************Login Controller Login Method******************");
 		try {
 			if (userCredential != null) {
 				response=loginService.authenticateUser(userCredential, request);
+				
 			}
 			else {
-				response.setRespCode("01");
+				response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+				response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 				response.setRespData("Please Provide the required field.");
 			}
 		} catch (Exception e) {
 			logger.info("Exception Login ****** " + e.getMessage());
-			response.setRespCode("01");
+			response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 			response.setRespData("Internal Server Error in Login. Please Try again!");
 			
 		}
@@ -58,13 +61,15 @@ public class LoginController {
 			if(userName!=null) {
 				response=loginService.loggoffUser(userName);
 			}else {
-				response.setRespCode("01");
+				response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+				response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 				response.setRespData("Please Provide the required field.");
 			}
 			
 		}catch (Exception e) {
 			logger.info("Exception Logged Off ****** " + e.getMessage());
-			response.setRespCode("01");
+			response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 			response.setRespData("Internal Server Error in log off. Please Try again!");
 		}
 		return CommonUtils.getResponse(response, MediaType.APPLICATION_JSON);

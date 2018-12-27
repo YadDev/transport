@@ -19,6 +19,7 @@ import com.transport.admin.entity.UserCredential;
 import com.transport.admin.persistence.LoginRepo;
 import com.transport.beans.admin.BaseResponse;
 import com.transport.util.commons.CommonUtils;
+import com.transport.util.commons.StringsUtils;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -28,19 +29,17 @@ public class LoginServiceImpl implements LoginService {
 	private static final Logger logger = LoggerFactory.getLogger(LoginServiceImpl.class);
 
 	HttpSession session = null;
-	
+
 	private BaseResponse response = null;
-	
 
 	@Autowired
 	private LoginRepo loginRepo;
-	
-	
+
 	@Override
 	public UserCredential findByUserName(String userName) {
 		return loginRepo.findByUserName(userName);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public BaseResponse authenticateUser(UserCredential userCredential, HttpServletRequest request) throws Exception {
@@ -77,7 +76,6 @@ public class LoginServiceImpl implements LoginService {
 		ServletContext sc = session.getServletContext();
 
 		if (sc.getAttribute("hMap") != null) {
-			@SuppressWarnings("unchecked")
 			HashMap<String, String> application = (HashMap<String, String>) sc.getAttribute("hMap");
 			System.out.println("login user Name====" + userName);
 			Set<String> keys = application.keySet();
@@ -98,7 +96,7 @@ public class LoginServiceImpl implements LoginService {
 			}
 		}
 
-		boolean setSession = true;//userService.getUserDetail(session, userName, pwd);
+		boolean setSession = true;// userService.getUserDetail(session, userName, pwd);
 
 		if (loginFrom.equals("SingleLogin")) {
 			Map<String, String> map;
@@ -124,24 +122,28 @@ public class LoginServiceImpl implements LoginService {
 //				Calendar cal = Calendar.getInstance();
 //				cal.setTime(new Date());
 //				cal.add(Calendar.MINUTE, 1);
-				
+
 				jwtToken = Jwts.builder().setIssuer("" + user.getUserId())
 						/* .setExpiration(cal.getTime()) */.setSubject(request.getSession().getId())
 						.claim("roles", "user").setIssuedAt(new Date()).signWith(SignatureAlgorithm.HS256, "secretKey")
 						.compact(); // HMAC SHA 256 Algorithm Used.
-				response.setRespCode("00");
+				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
 				response.setRespData(jwtToken);
-				
+
 			} else {
-				response.setRespCode("01");
+				response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+				response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
 				response.setRespData("Token Generation Failed");
-			
+
 			}
 
 		} else {
-			response.setRespCode("01");
-			response.setRespData("Already Logged in from other device. Please logout from other device and try again later.");
-			
+			response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+			response.setRespData(
+					"Already Logged in from other device. Please logout from other device and try again later.");
+
 		}
 		logger.info("*********Service Authenticate User Method End**************");
 		return response;
@@ -154,7 +156,6 @@ public class LoginServiceImpl implements LoginService {
 		response = new BaseResponse();
 		ServletContext sc = session.getServletContext();
 		if (sc.getAttribute("hMap") != null) {
-			@SuppressWarnings("unchecked")
 			HashMap<String, String> application = (HashMap<String, String>) sc.getAttribute("hMap");
 			Map<String, HttpSession> sessionMap = (HashMap<String, HttpSession>) sc.getAttribute("OldSession");
 			String sessionId = application.get(userName);
@@ -168,19 +169,23 @@ public class LoginServiceImpl implements LoginService {
 				if (oldSession != null) {
 					oldSession.invalidate();
 					sessionMap.remove(sessionId);
-					response.setRespCode("00");
+					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
 					response.setRespData("Logged off Succesfully!");
 
 				} else {
-					response.setRespCode("00");
+					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
 					response.setRespData("Already Logged Out.");
 
 				}
 
-				response.setRespCode("00");
+				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
 				response.setRespData("Logged Out Successfully.");
 			} else {
-				response.setRespCode("00");
+				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
 				response.setRespData("Already Logged Out");
 
 			}
@@ -188,5 +193,5 @@ public class LoginServiceImpl implements LoginService {
 		logger.info("*********Service loggoffUser Method End**************");
 		return response;
 	}
-	
+
 }
