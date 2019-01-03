@@ -3,6 +3,9 @@
 	<name>transport-admin</name>
 	<comment></comment>
 	<projects>
+		<project>transport-util</project>
+		<project>transport-persistence</project>
+		<project>transport-beans</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -2,20 +2,12 @@ package com.transport.util.commons;
 
 import java.security.MessageDigest;
 import java.security.SecureRandom;
-import java.util.HashMap;
 import java.util.Random;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-
-import com.transport.admin.entity.UserCredential;
-import com.transport.admin.service.LoginServiceImpl;
 
 
 public class CommonUtils {
@@ -72,35 +64,35 @@ public class CommonUtils {
 		return sb.toString();
 	}
 	
-	public static boolean validateUserHeader(LoginServiceImpl userService,HttpServletRequest request) {
-		boolean response=false;
-		try {
-			HttpSession session=request.getSession();
-			ServletContext sc = session.getServletContext();
-			if(sc.getAttribute("hMap")!=null) {
-				@SuppressWarnings("unchecked")
-				HashMap<String, String> application = (HashMap<String, String>) sc.getAttribute("hMap");
-				if(request.getParameter("SessionUserName")!=null) {
-					String userName=request.getParameter("SessionUserName").toString();
-					String sessionID=application.get(userName);
-					UserCredential user=userService.findByUserName(userName);
-					
-					if(session.getAttribute(""+user.getUserId())!=null && sessionID.equals(session.getAttribute(""+user.getUserId()).toString())) {
-						response=true;
-					}
-					else {
-					
-						response=true;
-					}
-				}else {
-					response=false;
-				}
-				
-			}
-		}catch (Exception e) {
-			response=false;
-		}
-		return response;
-	}
+//	public static boolean validateUserHeader(LoginServiceImpl userService,HttpServletRequest request) {
+//		boolean response=false;
+//		try {
+//			HttpSession session=request.getSession();
+//			ServletContext sc = session.getServletContext();
+//			if(sc.getAttribute("hMap")!=null) {
+//				@SuppressWarnings("unchecked")
+//				HashMap<String, String> application = (HashMap<String, String>) sc.getAttribute("hMap");
+//				if(request.getParameter("SessionUserName")!=null) {
+//					String userName=request.getParameter("SessionUserName").toString();
+//					String sessionID=application.get(userName);
+//					UserCredential user=userService.findByUserName(userName);
+//					
+//					if(session.getAttribute(""+user.getUserId())!=null && sessionID.equals(session.getAttribute(""+user.getUserId()).toString())) {
+//						response=true;
+//					}
+//					else {
+//					
+//						response=true;
+//					}
+//				}else {
+//					response=false;
+//				}
+//				
+//			}
+//		}catch (Exception e) {
+//			response=false;
+//		}
+//		return response;
+//	}
 
 }
