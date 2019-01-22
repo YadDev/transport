@@ -9,18 +9,21 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.transport.beans.admin.BaseResponse;
+import com.transport.beans.admin.CreateMenuRequest;
 import com.transport.transit.admin.service.AdminService;
 import com.transport.transit.admin.service.LoginServiceImpl;
 import com.transport.transit.persistence.entity.BusStopMaster;
-import com.transport.transit.persistence.entity.MenuMaster;
+import com.transport.transit.persistence.entity.MenuEntity;
 import com.transport.transit.persistence.entity.UserCredential;
 import com.transport.util.commons.CommonUtils;
 import com.transport.util.commons.StringsUtils;
@@ -38,30 +41,33 @@ public class AdminController {
 
 	
 	@RequestMapping(value = "/menus", method = RequestMethod.POST)
-	public ResponseEntity<Object> getMenu(HttpServletRequest request) {
-		List<MenuMaster> lists = new ArrayList<>();
+	public ResponseEntity<Object> getMenu(@RequestBody String roleID,HttpServletRequest request) {
+		List<CreateMenuRequest> lists = new ArrayList<>();
 		response = new BaseResponse();
 //		if(validateUserHeader(loginService, request)) {
 		lists = adminService.loadMenuMaster(1);
-		response.setRespCode("00");
-		response.setRespData(lists);
+//		response.setRespCode(1);
+//		response.setRespData(lists);
 //		}
 //		else {
 //			response.setRespCode("01");
 //			response.setRespData("UnAuthorised Access!");
 //		}
-		return CommonUtils.getResponse(response, MediaType.APPLICATION_JSON);
+		return CommonUtils.getResponse(lists, MediaType.APPLICATION_JSON);
 	}
 
-	@RequestMapping(value = "/createMenu", method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Object> createMenu(@RequestBody MenuMaster menuMaster) {
-		System.out.println("Menu to Add "+menuMaster.toString());
-		MenuMaster menu = new MenuMaster();
+	@RequestMapping(value = "/createMenu", method = RequestMethod.POST)
+	public ResponseEntity<Object> createMenu(@RequestBody CreateMenuRequest createMenuRequest) {
+		System.out.println("Menu to Add "+createMenuRequest.toString());
 		response = new BaseResponse();
-		menu = adminService.createNewMenu(menuMaster);
-		response.setRespCode("00");
-		response.setRespData(menu);
-
+		try {  
+			response.setRespCode(1);
+			response.setRespMessage("Data Saved Successfully.");
+			response.setRespData(adminService.createNewMenu(createMenuRequest));
+		}
+		catch (DataAccessException e) {
+			response.setRespMessage(e.getMessage());
+		}		
 		return CommonUtils.getResponse(response, MediaType.APPLICATION_JSON);
 	}
 
@@ -74,14 +80,14 @@ public class AdminController {
 		if (validateUserHeader(loginService, request)) {
 			busStopsList = adminService.loadAllBusStops();
 			if (busStopsList != null) {
-				response.setRespCode("00");
+				response.setRespCode(1);
 				response.setRespData(busStopsList);
 			} else {
-				response.setRespCode("01");
+				response.setRespCode(0);
 				response.setRespData("No Data Available!");
 			}
 		} else {
-			response.setRespCode("01");
+			response.setRespCode(0);
 			response.setRespData("UnAuthorised Access!");
 		}
 		return CommonUtils.getResponse(response, MediaType.APPLICATION_JSON);
@@ -104,10 +110,10 @@ public class AdminController {
 //		if(CommonUtils.validateUserHeader(loginService, request)) {
 		busStopDetails = adminService.getBusStopDetails("MUM");
 		if (busStopDetails != null) {
-			response.setRespCode("00");
+			response.setRespCode(1);
 			response.setRespData(busStopDetails);
 		} else {
-			response.setRespCode("01");
+			response.setRespCode(0);
 			response.setRespData("No Data Available!");
 		}
 //		}
@@ -124,7 +130,7 @@ public class AdminController {
 		System.out.println("New BusStop to Add "+busStopMaster.toString());		
 		BusStopMaster temp=adminService.createBusStop(busStopMaster);
 		response = new BaseResponse();
-		response.setRespCode("00");
+		response.setRespCode(0);
 		response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
 		response.setRespData(temp);
 		return CommonUtils.getResponse(response, MediaType.APPLICATION_JSON);
@@ -135,7 +141,7 @@ public class AdminController {
 		System.out.println("New BusStop to Add "+busStopMaster.toString());
 		busStopMaster=adminService.updateBusStop(busStopMaster);
 		response = new BaseResponse();
-		response.setRespCode("00");
+		response.setRespCode(0);
 		response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
 		response.setRespData(busStopMaster);
 		return CommonUtils.getResponse(response, MediaType.APPLICATION_JSON);
@@ -145,7 +151,7 @@ public class AdminController {
 	public ResponseEntity<Object> removeBusStop(@RequestBody String busStopCode) {
 		System.out.println("New BusStop to Add "+busStopCode);		
 		response = new BaseResponse();
-		response.setRespCode("00");
+		response.setRespCode(0);
 		response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
 		response.setRespData(busStopCode);
 		return CommonUtils.getResponse(response, MediaType.APPLICATION_JSON);

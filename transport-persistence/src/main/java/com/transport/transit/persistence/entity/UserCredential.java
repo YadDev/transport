@@ -40,7 +40,7 @@ public class UserCredential {
 	@Column(name="user_status_code")
 	private Integer userStatus;
 	
-	@Column(name="client_id")
+	@Column(name="rel_organization_id")
 	private Integer clientID;
 	
 	@Column(name="user_created_by")

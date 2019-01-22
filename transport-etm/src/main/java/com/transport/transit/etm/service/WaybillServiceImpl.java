@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.transport.transit.persistence.entity.WaybillEntity;
-import com.transport.transit.persistence.repostiory.WaybillRepo;
+import com.transport.transit.persistence.repostiory.WaybillRepository;
 
 @Service
 public class WaybillServiceImpl implements WaybillService{
 
 	@Autowired
-	private WaybillRepo waybill;
+	private WaybillRepository waybill;
 	@Override
 	public WaybillEntity findByConductorAndDutyDate(Integer condId,Date dates) {				
 		return waybill.findByWaybillConductorAndDutyDate(1, new Date());

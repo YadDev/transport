@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 
 import com.transport.beans.admin.BaseResponse;
 import com.transport.transit.persistence.entity.UserCredential;
-import com.transport.transit.persistence.repostiory.LoginRepo;
+import com.transport.transit.persistence.repostiory.LoginRepository;
 import com.transport.util.commons.CommonUtils;
 import com.transport.util.commons.StringsUtils;
 
@@ -33,7 +33,7 @@ public class LoginServiceImpl implements LoginService {
 	private BaseResponse response = null;
 
 	@Autowired
-	private LoginRepo loginRepo;
+	private LoginRepository loginRepo;
 
 	@Override
 	public UserCredential findByUserName(String userName) {

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.transport.transit.persistence.entity.BusStopMaster;
 
 @Repository
-public interface BusMasterRepo extends JpaRepository<BusStopMaster, Long> {
+public interface BusMasterRepository extends JpaRepository<BusStopMaster, Long> {
 	public BusStopMaster findByBusStopCode(String code);
 	public void deleteByBusStopCode(String busStopCode);
 

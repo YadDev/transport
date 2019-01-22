@@ -8,7 +8,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class BaseResponse {
-	private String respCode;
+	private int respCode;
 	private String respMessage;
 	private Object respData;
 	

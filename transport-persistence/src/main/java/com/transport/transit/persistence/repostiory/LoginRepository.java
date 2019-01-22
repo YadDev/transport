@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.transport.transit.persistence.entity.UserCredential;
 
 @Repository
-public interface LoginRepo extends JpaRepository<UserCredential, Long> {
+public interface LoginRepository extends JpaRepository<UserCredential, Long> {
 	public UserCredential findByUserName(String userName);
 }

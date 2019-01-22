@@ -54,9 +54,9 @@ public class LoginController {
 	}
 
 	@RequestMapping(value = "/logout", method = RequestMethod.POST)
-	public ResponseEntity<Object> loggoff(HttpServletRequest request) throws ServletException {
-		System.out.println("loggoff " + request.getParameter("SessionUserName"));
-		String userName = request.getParameter("SessionUserName");
+	public ResponseEntity<Object> loggoff(@RequestBody String userName) throws ServletException {
+		System.out.println("loggoff " +userName);
+		
 		try {
 			if(userName!=null) {
 				response=loginService.loggoffUser(userName);
