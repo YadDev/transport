@@ -15,16 +15,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.transport.beans.admin.BaseResponse;
-import com.transport.beans.admin.CreateMenuRequest;
+import com.transport.beans.admin.BusStopMasterRequest;
+import com.transport.beans.admin.MenuMasterRequest;
+import com.transport.beans.admin.UserMasterRequest;
 import com.transport.transit.admin.service.AdminService;
 import com.transport.transit.admin.service.LoginServiceImpl;
-import com.transport.transit.persistence.entity.BusStopMaster;
-import com.transport.transit.persistence.entity.MenuEntity;
-import com.transport.transit.persistence.entity.UserCredential;
 import com.transport.util.commons.CommonUtils;
 import com.transport.util.commons.StringsUtils;
 
@@ -42,7 +40,7 @@ public class AdminController {
 	
 	@RequestMapping(value = "/menus", method = RequestMethod.POST)
 	public ResponseEntity<Object> getMenu(@RequestBody String roleID,HttpServletRequest request) {
-		List<CreateMenuRequest> lists = new ArrayList<>();
+		List<MenuMasterRequest> lists = new ArrayList<>();
 		response = new BaseResponse();
 //		if(validateUserHeader(loginService, request)) {
 		lists = adminService.loadMenuMaster(1);
@@ -57,7 +55,7 @@ public class AdminController {
 	}
 
 	@RequestMapping(value = "/createMenu", method = RequestMethod.POST)
-	public ResponseEntity<Object> createMenu(@RequestBody CreateMenuRequest createMenuRequest) {
+	public ResponseEntity<Object> createMenu(@RequestBody MenuMasterRequest createMenuRequest) {
 		System.out.println("Menu to Add "+createMenuRequest.toString());
 		response = new BaseResponse();
 		try {  
@@ -75,7 +73,7 @@ public class AdminController {
 	
 	@RequestMapping(value = "/busStops", method = RequestMethod.POST)
 	public ResponseEntity<Object> getAllBusStops(HttpServletRequest request) {
-		List<BusStopMaster> busStopsList = new ArrayList<>();
+		List<BusStopMasterRequest> busStopsList = new ArrayList<>();
 		response = new BaseResponse();
 		if (validateUserHeader(loginService, request)) {
 			busStopsList = adminService.loadAllBusStops();
@@ -102,9 +100,9 @@ public class AdminController {
 	 */
 
 	@RequestMapping(value = "/busStopDetails", method = RequestMethod.POST)
-	public ResponseEntity<Object> getBusStopDetails(@RequestBody BusStopMaster stopDetails,
+	public ResponseEntity<Object> getBusStopDetails(@RequestBody BusStopMasterRequest stopDetails,
 			HttpServletRequest request) {
-		BusStopMaster busStopDetails = new BusStopMaster();
+		BusStopMasterRequest busStopDetails = new BusStopMasterRequest();
 		response = new BaseResponse();
 		System.out.println("Input Parameter " + stopDetails);
 //		if(CommonUtils.validateUserHeader(loginService, request)) {
@@ -126,18 +124,18 @@ public class AdminController {
 	
 	
 	@RequestMapping(value = "/createBusStop", method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Object> createBusStop(@RequestBody BusStopMaster busStopMaster) {
+	public ResponseEntity<Object> createBusStop(@RequestBody BusStopMasterRequest busStopMaster) {
 		System.out.println("New BusStop to Add "+busStopMaster.toString());		
-		BusStopMaster temp=adminService.createBusStop(busStopMaster);
+		boolean resp=adminService.createBusStop(busStopMaster);
 		response = new BaseResponse();
 		response.setRespCode(0);
 		response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
-		response.setRespData(temp);
+		response.setRespData(resp);
 		return CommonUtils.getResponse(response, MediaType.APPLICATION_JSON);
 	}
 
 	@RequestMapping(value = "/updateBusStop", method = RequestMethod.POST,consumes=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Object> updateBusStop(@RequestBody BusStopMaster busStopMaster) {
+	public ResponseEntity<Object> updateBusStop(@RequestBody BusStopMasterRequest busStopMaster) {
 		System.out.println("New BusStop to Add "+busStopMaster.toString());
 		busStopMaster=adminService.updateBusStop(busStopMaster);
 		response = new BaseResponse();
@@ -170,7 +168,7 @@ public class AdminController {
 				if (request.getParameter("SessionUserName") != null) {
 					String userName = request.getParameter("SessionUserName").toString();
 					String sessionID = application.get(userName);
-					UserCredential user = userService.findByUserName(userName);
+					UserMasterRequest user = userService.findByUserName(userName);
 
 					if (session.getAttribute("" + user.getUserId()) != null
 							&& sessionID.equals(session.getAttribute("" + user.getUserId()).toString())) {

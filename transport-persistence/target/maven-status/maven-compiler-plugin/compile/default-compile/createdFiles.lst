@@ -1,0 +1,13 @@
+com\transport\transit\persistence\config\BeanConfig.class
+com\transport\transit\persistence\entity\BusStopEntity.class
+com\transport\transit\persistence\entity\UserCredential.class
+com\transport\transit\persistence\entity\BusStopMaster.class
+com\transport\transit\persistence\repostiory\LoginRepository.class
+com\transport\transit\persistence\entity\WaybillEntity.class
+com\transport\transit\persistence\repostiory\WaybillRepository.class
+com\transport\transit\persistence\App.class
+com\transport\transit\persistence\entity\SubMenuEntity.class
+com\transport\transit\persistence\constant\Quries.class
+com\transport\transit\persistence\entity\MenuEntity.class
+com\transport\transit\persistence\repostiory\MenuRepository.class
+com\transport\transit\persistence\repostiory\BusMasterRepository.class

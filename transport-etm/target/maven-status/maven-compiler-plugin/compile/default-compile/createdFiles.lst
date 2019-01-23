@@ -1,0 +1,4 @@
+com\transport\transit\etm\controller\WaybillController.class
+com\transport\transit\etm\service\WaybillService.class
+com\transport\transit\etm\ETMBootStarter.class
+com\transport\transit\etm\service\WaybillServiceImpl.class

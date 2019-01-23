@@ -1,0 +1,4 @@
+com\transport\beans\admin\BaseResponse.class
+com\transport\beans\App.class
+com\transport\beans\admin\CreateMenuRequest.class
+com\transport\beans\etm\WaybillBeans.class

@@ -3,7 +3,7 @@
 	<persistence-unit name="transport-persistence">
 		<class>com.transport.transit.persistence.entity.BusStopEntity</class>
 		<class>com.transport.transit.persistence.entity.MenuEntity</class>
-		<class>com.transport.transit.persistence.entity.SubMenuEntity</class>
+		<class>com.transport.transit.persistence.entity.MstRoute</class>
 		<class>com.transport.transit.persistence.entity.UserEntity</class>
 		<class>com.transport.transit.persistence.entity.WaybillEntity</class>
 	</persistence-unit>

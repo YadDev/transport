@@ -16,12 +16,12 @@ public class UserEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="user_id")
 	private int userId;
 
-	@Column(name="client_id")
-	private int clientId;
+	@Column(name="rel_organization_id")
+	private int relOrganizationId;
 
 	@Column(name="user_code")
 	private String userCode;
@@ -55,12 +55,12 @@ public class UserEntity implements Serializable {
 		this.userId = userId;
 	}
 
-	public int getClientId() {
-		return this.clientId;
+	public int getRelOrganizationId() {
+		return this.relOrganizationId;
 	}
 
-	public void setClientId(int clientId) {
-		this.clientId = clientId;
+	public void setRelOrganizationId(int relOrganizationId) {
+		this.relOrganizationId = relOrganizationId;
 	}
 
 	public String getUserCode() {

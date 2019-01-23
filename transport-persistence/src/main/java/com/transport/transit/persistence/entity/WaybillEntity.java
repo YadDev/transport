@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.sql.Timestamp;
 import java.math.BigInteger;
 
 
@@ -18,7 +19,7 @@ public class WaybillEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="waybill_id")
 	private String waybillId;
 
@@ -43,17 +44,29 @@ public class WaybillEntity implements Serializable {
 	@Column(name="duty_gen_time")
 	private Date dutyGenTime;
 
-	@Column(name="duty_id")
-	private BigInteger dutyId;
-
-	@Column(name="etim_reg_no")
-	private String etimRegNo;
-
 	@Column(name="issue_clerk")
 	private String issueClerk;
 
+	@Column(name="no_of_days")
+	private int noOfDays;
+
+	@Column(name="rel_bus_type_id")
+	private int relBusTypeId;
+
+	@Column(name="rel_duty_allocation_id")
+	private BigInteger relDutyAllocationId;
+
+	@Column(name="rel_etim_no")
+	private String relEtimNo;
+
+	@Column(name="rel_extra_reason")
+	private int relExtraReason;
+
 	@Column(name="rel_version_id")
 	private int relVersionId;
+
+	@Column(name="rel_waybill_status_id")
+	private int relWaybillStatusId;
 
 	@Column(name="schedule_km")
 	private BigDecimal scheduleKm;
@@ -65,7 +78,7 @@ public class WaybillEntity implements Serializable {
 	private String waybillCollectClerk;
 
 	@Column(name="waybill_collect_time")
-	private int waybillCollectTime;
+	private Timestamp waybillCollectTime;
 
 	@Column(name="waybill_conductor")
 	private BigInteger waybillConductor;
@@ -82,11 +95,8 @@ public class WaybillEntity implements Serializable {
 	@Column(name="waybill_sup_driver")
 	private BigInteger waybillSupDriver;
 
-	@Column(name="waybill_supdriver")
-	private int waybillSupdriver;
-
-	@Column(name="waybill_type_id")
-	private int waybillTypeId;
+	@Column(name="waybill_type")
+	private String waybillType;
 
 	@Column(name="waybill_vehicle")
 	private BigInteger waybillVehicle;
@@ -150,22 +160,6 @@ public class WaybillEntity implements Serializable {
 		this.dutyGenTime = dutyGenTime;
 	}
 
-	public BigInteger getDutyId() {
-		return this.dutyId;
-	}
-
-	public void setDutyId(BigInteger dutyId) {
-		this.dutyId = dutyId;
-	}
-
-	public String getEtimRegNo() {
-		return this.etimRegNo;
-	}
-
-	public void setEtimRegNo(String etimRegNo) {
-		this.etimRegNo = etimRegNo;
-	}
-
 	public String getIssueClerk() {
 		return this.issueClerk;
 	}
@@ -174,12 +168,60 @@ public class WaybillEntity implements Serializable {
 		this.issueClerk = issueClerk;
 	}
 
+	public int getNoOfDays() {
+		return this.noOfDays;
+	}
+
+	public void setNoOfDays(int noOfDays) {
+		this.noOfDays = noOfDays;
+	}
+
+	public int getRelBusTypeId() {
+		return this.relBusTypeId;
+	}
+
+	public void setRelBusTypeId(int relBusTypeId) {
+		this.relBusTypeId = relBusTypeId;
+	}
+
+	public BigInteger getRelDutyAllocationId() {
+		return this.relDutyAllocationId;
+	}
+
+	public void setRelDutyAllocationId(BigInteger relDutyAllocationId) {
+		this.relDutyAllocationId = relDutyAllocationId;
+	}
+
+	public String getRelEtimNo() {
+		return this.relEtimNo;
+	}
+
+	public void setRelEtimNo(String relEtimNo) {
+		this.relEtimNo = relEtimNo;
+	}
+
+	public int getRelExtraReason() {
+		return this.relExtraReason;
+	}
+
+	public void setRelExtraReason(int relExtraReason) {
+		this.relExtraReason = relExtraReason;
+	}
+
 	public int getRelVersionId() {
 		return this.relVersionId;
 	}
 
 	public void setRelVersionId(int relVersionId) {
 		this.relVersionId = relVersionId;
+	}
+
+	public int getRelWaybillStatusId() {
+		return this.relWaybillStatusId;
+	}
+
+	public void setRelWaybillStatusId(int relWaybillStatusId) {
+		this.relWaybillStatusId = relWaybillStatusId;
 	}
 
 	public BigDecimal getScheduleKm() {
@@ -206,11 +248,11 @@ public class WaybillEntity implements Serializable {
 		this.waybillCollectClerk = waybillCollectClerk;
 	}
 
-	public int getWaybillCollectTime() {
+	public Timestamp getWaybillCollectTime() {
 		return this.waybillCollectTime;
 	}
 
-	public void setWaybillCollectTime(int waybillCollectTime) {
+	public void setWaybillCollectTime(Timestamp waybillCollectTime) {
 		this.waybillCollectTime = waybillCollectTime;
 	}
 
@@ -254,20 +296,12 @@ public class WaybillEntity implements Serializable {
 		this.waybillSupDriver = waybillSupDriver;
 	}
 
-	public int getWaybillSupdriver() {
-		return this.waybillSupdriver;
+	public String getWaybillType() {
+		return this.waybillType;
 	}
 
-	public void setWaybillSupdriver(int waybillSupdriver) {
-		this.waybillSupdriver = waybillSupdriver;
-	}
-
-	public int getWaybillTypeId() {
-		return this.waybillTypeId;
-	}
-
-	public void setWaybillTypeId(int waybillTypeId) {
-		this.waybillTypeId = waybillTypeId;
+	public void setWaybillType(String waybillType) {
+		this.waybillType = waybillType;
 	}
 
 	public BigInteger getWaybillVehicle() {

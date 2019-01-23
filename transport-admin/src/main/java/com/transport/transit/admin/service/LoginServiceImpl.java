@@ -16,7 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.transport.beans.admin.BaseResponse;
-import com.transport.transit.persistence.entity.UserCredential;
+import com.transport.beans.admin.UserMasterRequest;
+import com.transport.transit.persistence.entity.UserEntity;
 import com.transport.transit.persistence.repostiory.LoginRepository;
 import com.transport.util.commons.CommonUtils;
 import com.transport.util.commons.StringsUtils;
@@ -36,13 +37,21 @@ public class LoginServiceImpl implements LoginService {
 	private LoginRepository loginRepo;
 
 	@Override
-	public UserCredential findByUserName(String userName) {
-		return loginRepo.findByUserName(userName);
+	public UserMasterRequest findByUserName(String userName) {
+		UserEntity userEntity=loginRepo.findByUserName(userName);
+		UserMasterRequest user=new UserMasterRequest();
+		if(userEntity !=null) {
+			user.setUserId(userEntity.getUserId());
+			user.setUserName(userEntity.getUserName());
+			user.setPassword(userEntity.getUserPass());
+			user.setUserType("Admin");
+		}
+		return user;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public BaseResponse authenticateUser(UserCredential userCredential, HttpServletRequest request) throws Exception {
+	public BaseResponse authenticateUser(UserMasterRequest userCredential, HttpServletRequest request) throws Exception {
 		logger.info("*********Service Authenticate User Method Start**************");
 		response = new BaseResponse();
 		String jwtToken = "";
@@ -55,13 +64,13 @@ public class LoginServiceImpl implements LoginService {
 		String userName = userCredential.getUserName();
 		String password = userCredential.getPassword();
 
-		UserCredential user = loginRepo.findByUserName(userName);
+		UserEntity user = loginRepo.findByUserName(userName);
 		String loginFrom = "SingleLogin";
 		if (user == null) {
 			throw new Exception("User Name not found.");
 		}
 
-		String pwd = user.getPassword();
+		String pwd = user.getUserPass();
 
 		if (!password.equals(pwd)) {
 			throw new ServletException("Invalid login. Please check your name and password.");
@@ -160,7 +169,7 @@ public class LoginServiceImpl implements LoginService {
 			Map<String, HttpSession> sessionMap = (HashMap<String, HttpSession>) sc.getAttribute("OldSession");
 			String sessionId = application.get(userName);
 			application.remove(userName);
-			UserCredential user = loginRepo.findByUserName(userName);
+			UserEntity user = loginRepo.findByUserName(userName);
 			if (sessionId != null) {
 				HttpSession oldSession = sessionMap.get(sessionId);
 				if (session.getAttribute("" + user.getUserId()) != null) {

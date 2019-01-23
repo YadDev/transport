@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.transport.beans.admin.BaseResponse;
+import com.transport.beans.admin.UserMasterRequest;
 import com.transport.transit.admin.service.LoginServiceImpl;
-import com.transport.transit.persistence.entity.UserCredential;
 import com.transport.util.commons.CommonUtils;
 import com.transport.util.commons.StringsUtils;
 
@@ -30,7 +30,7 @@ public class LoginController {
 	HttpSession session = null;
 	BaseResponse response = null;
 	@RequestMapping(value = { "/", "/login" }, method = RequestMethod.POST)
-	public ResponseEntity<Object> login(@RequestBody UserCredential userCredential, HttpServletRequest request) {
+	public ResponseEntity<Object> login(@RequestBody UserMasterRequest userCredential, HttpServletRequest request) {
 		logger.info("********************Login Controller Login Method******************");
 		try {
 			if (userCredential != null) {
