@@ -1,4 +1,13 @@
-com\transport\beans\admin\BaseResponse.class
+com\transport\beans\admin\BusStopMasterRequest.class
+com\transport\beans\etm\RouteStopRequest.class
+com\transport\beans\admin\VehicleRequest.class
+com\transport\beans\admin\UserMasterRequest.class
+com\transport\beans\admin\RegionRequest.class
+com\transport\beans\etm\RouteRequest.class
+com\transport\beans\admin\MenuMasterRequest.class
+com\transport\beans\etm\WaybillRequest.class
+com\transport\beans\admin\DepotRequest.class
+com\transport\beans\etm\RouteTypeRequest.class
 com\transport\beans\App.class
-com\transport\beans\admin\CreateMenuRequest.class
-com\transport\beans\etm\WaybillBeans.class
+com\transport\beans\admin\BaseResponse.class
+com\transport\beans\etm\CrewMasterRequest.class

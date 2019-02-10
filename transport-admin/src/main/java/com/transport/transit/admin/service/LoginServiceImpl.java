@@ -17,7 +17,10 @@ import org.springframework.stereotype.Service;
 
 import com.transport.beans.admin.BaseResponse;
 import com.transport.beans.admin.UserMasterRequest;
+import com.transport.beans.etm.CrewMasterRequest;
+import com.transport.transit.persistence.entity.CrewEntity;
 import com.transport.transit.persistence.entity.UserEntity;
+import com.transport.transit.persistence.repostiory.CrewRepository;
 import com.transport.transit.persistence.repostiory.LoginRepository;
 import com.transport.util.commons.CommonUtils;
 import com.transport.util.commons.StringsUtils;
@@ -36,11 +39,14 @@ public class LoginServiceImpl implements LoginService {
 	@Autowired
 	private LoginRepository loginRepo;
 
+	@Autowired
+	private CrewRepository crewRepository;
+	
 	@Override
 	public UserMasterRequest findByUserName(String userName) {
-		UserEntity userEntity=loginRepo.findByUserName(userName);
-		UserMasterRequest user=new UserMasterRequest();
-		if(userEntity !=null) {
+		UserEntity userEntity = loginRepo.findByUserCode(userName);
+		UserMasterRequest user = new UserMasterRequest();
+		if (userEntity != null) {
 			user.setUserId(userEntity.getUserId());
 			user.setUserName(userEntity.getUserName());
 			user.setPassword(userEntity.getUserPass());
@@ -51,7 +57,8 @@ public class LoginServiceImpl implements LoginService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public BaseResponse authenticateUser(UserMasterRequest userCredential, HttpServletRequest request) throws Exception {
+	public BaseResponse authenticateUser(UserMasterRequest userCredential, HttpServletRequest request)
+			throws Exception {
 		logger.info("*********Service Authenticate User Method Start**************");
 		response = new BaseResponse();
 		String jwtToken = "";
@@ -64,94 +71,118 @@ public class LoginServiceImpl implements LoginService {
 		String userName = userCredential.getUserName();
 		String password = userCredential.getPassword();
 
-		UserEntity user = loginRepo.findByUserName(userName);
-		String loginFrom = "SingleLogin";
-		if (user == null) {
-			throw new Exception("User Name not found.");
-		}
-
-		String pwd = user.getUserPass();
-
-		if (!password.equals(pwd)) {
-			throw new ServletException("Invalid login. Please check your name and password.");
-		}
-
-		String encPwd = CommonUtils.getHashed(pwd, userName);
-
-		session.setAttribute("userName", userName);
-		session.setAttribute("encPassword", pwd);
-		session.setAttribute("encPasswordNew", encPwd);
-
-		ServletContext sc = session.getServletContext();
-
-		if (sc.getAttribute("hMap") != null) {
-			HashMap<String, String> application = (HashMap<String, String>) sc.getAttribute("hMap");
-			System.out.println("login user Name====" + userName);
-			Set<String> keys = application.keySet();
-			System.out.println("keys====" + keys.size());
-			for (String key : keys) {
-				System.out.println("user Name====" + key);
-
-				if (key.equals(userName)) {
-					if (session.getAttribute("SessionUserName") != null) {
-						session.removeAttribute("SessionUserName");
-					}
-					session.setAttribute("SessionUserName", userName);
-					loginFrom = "multiLogin";
-					break;
-				} else {
-					loginFrom = "SingleLogin";
-				}
-			}
-		}
-
-		boolean setSession = true;// userService.getUserDetail(session, userName, pwd);
-
-		if (loginFrom.equals("SingleLogin")) {
-			Map<String, String> map;
-			Map<String, HttpSession> sessionMap;
-
-			if ((HashMap<String, String>) sc.getAttribute("hMap") != null) {
-				map = (HashMap<String, String>) sc.getAttribute("hMap");
-				sessionMap = (HashMap<String, HttpSession>) sc.getAttribute("OldSession");
-			} else {
-				map = new HashMap<String, String>();
-				sessionMap = new HashMap<String, HttpSession>();
-			}
-
-			sessionMap.put(session.getId(), session);
-			// add attributes to the SessionMap
-
-			map.put(userName, request.getSession().getId());
-			System.out.println("Session Id in Controller " + userName + " : " + map.get(userName));
-			sc.setAttribute("hMap", map);
-			sc.setAttribute("OldSession", sessionMap);
-			if (setSession) {
-//				SimpleDateFormat df = new SimpleDateFormat("HH:mm");
-//				Calendar cal = Calendar.getInstance();
-//				cal.setTime(new Date());
-//				cal.add(Calendar.MINUTE, 1);
-
-				jwtToken = Jwts.builder().setIssuer("" + user.getUserId())
-						/* .setExpiration(cal.getTime()) */.setSubject(request.getSession().getId())
-						.claim("roles", "user").setIssuedAt(new Date()).signWith(SignatureAlgorithm.HS256, "secretKey")
-						.compact(); // HMAC SHA 256 Algorithm Used.
+		if (!userCredential.getUserType().equalsIgnoreCase("U")) {
+			CrewEntity entity=crewRepository.findByOrgUniqueId(userName);
+			if(entity!=null) {
+				CrewMasterRequest crew=new CrewMasterRequest();
+				crew.setCrewBirthDate(entity.getCrewBirthDate());
+				crew.setCrewCardId(entity.getCrewCardId());
+				crew.setCrewCreatedAt(entity.getCrewCreatedAt());
+				crew.setCrewCreatedBy(entity.getCrewCreatedBy());
+				
+				String crewToken=validateMachineLogin(crew,password,request);
+				
 				response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
 				response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
-				response.setRespData(jwtToken);
+				response.setRespData(crewToken);
+			}
+			else {
+				response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+				response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+				response.setRespData("No Valid User Exist!");
+			}
+			
+		} else {
+			UserEntity user = loginRepo.findByUserCode(userName);
+			String loginFrom = "SingleLogin";
+			if (user == null) {
+				throw new Exception("User Name not found.");
+			}
+
+			String pwd = user.getUserPass();
+
+			if (!password.equals(pwd)) {
+				throw new ServletException("Invalid login. Please check your name and password.");
+			}
+
+			String encPwd = CommonUtils.getHashed(pwd, userName);
+
+			session.setAttribute("userName", userName);
+			session.setAttribute("encPassword", pwd);
+			session.setAttribute("encPasswordNew", encPwd);
+
+			ServletContext sc = session.getServletContext();
+
+			if (sc.getAttribute("hMap") != null) {
+				HashMap<String, String> application = (HashMap<String, String>) sc.getAttribute("hMap");
+				System.out.println("login user Name====" + userName);
+				Set<String> keys = application.keySet();
+				System.out.println("keys====" + keys.size());
+				for (String key : keys) {
+					System.out.println("user Name====" + key);
+
+					if (key.equals(userName)) {
+						if (session.getAttribute("SessionUserName") != null) {
+							session.removeAttribute("SessionUserName");
+						}
+						session.setAttribute("SessionUserName", userName);
+						loginFrom = "multiLogin";
+						break;
+					} else {
+						loginFrom = "SingleLogin";
+					}
+				}
+			}
+
+			boolean setSession = true;// userService.getUserDetail(session, userName, pwd);
+
+			if (loginFrom.equals("SingleLogin")) {
+				Map<String, String> map;
+				Map<String, HttpSession> sessionMap;
+
+				if ((HashMap<String, String>) sc.getAttribute("hMap") != null) {
+					map = (HashMap<String, String>) sc.getAttribute("hMap");
+					sessionMap = (HashMap<String, HttpSession>) sc.getAttribute("OldSession");
+				} else {
+					map = new HashMap<String, String>();
+					sessionMap = new HashMap<String, HttpSession>();
+				}
+
+				sessionMap.put(session.getId(), session);
+				// add attributes to the SessionMap
+
+				map.put(userName, request.getSession().getId());
+				System.out.println("Session Id in Controller " + userName + " : " + map.get(userName));
+				sc.setAttribute("hMap", map);
+				sc.setAttribute("OldSession", sessionMap);
+				if (setSession) {
+//					SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+//					Calendar cal = Calendar.getInstance();
+//					cal.setTime(new Date());
+//					cal.add(Calendar.MINUTE, 1);
+
+					jwtToken = Jwts.builder().setIssuer("" + user.getUserId())
+							/* .setExpiration(cal.getTime()) */.setSubject(request.getSession().getId())
+							.claim("roles", "user").setIssuedAt(new Date())
+							.signWith(SignatureAlgorithm.HS256, "secretKey").compact(); // HMAC SHA 256 Algorithm Used.
+					response.setRespCode(StringsUtils.Response.SUCCESS_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.SUCCESS_RESP_MSG);
+					response.setRespData(jwtToken);
+
+				} else {
+					response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
+					response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
+					response.setRespData("Token Generation Failed");
+
+				}
 
 			} else {
 				response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
 				response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
-				response.setRespData("Token Generation Failed");
+				response.setRespData(
+						"Already Logged in from other device. Please logout from other device and try again later.");
 
 			}
-
-		} else {
-			response.setRespCode(StringsUtils.Response.FAILURE_RESP_CODE);
-			response.setRespMessage(StringsUtils.Response.FAILURE_RESP_MSG);
-			response.setRespData(
-					"Already Logged in from other device. Please logout from other device and try again later.");
 
 		}
 		logger.info("*********Service Authenticate User Method End**************");
@@ -169,7 +200,7 @@ public class LoginServiceImpl implements LoginService {
 			Map<String, HttpSession> sessionMap = (HashMap<String, HttpSession>) sc.getAttribute("OldSession");
 			String sessionId = application.get(userName);
 			application.remove(userName);
-			UserEntity user = loginRepo.findByUserName(userName);
+			UserEntity user = loginRepo.findByUserCode(userName);
 			if (sessionId != null) {
 				HttpSession oldSession = sessionMap.get(sessionId);
 				if (session.getAttribute("" + user.getUserId()) != null) {
@@ -203,4 +234,17 @@ public class LoginServiceImpl implements LoginService {
 		return response;
 	}
 
+	public String validateMachineLogin(CrewMasterRequest crewMaster,String pass,HttpServletRequest request) {
+		String crewToken = new String();
+		if (!pass.equals(crewMaster.getCrewPass())) {
+			return "Invalid login. Please check your name and password.";
+		}
+		
+		crewToken = Jwts.builder().setIssuer("" + crewMaster.getOrgUniqueId())
+				/* .setExpiration(cal.getTime()) */.setSubject(request.getSession().getId())
+				.claim("roles", "user").setIssuedAt(new Date())
+				.signWith(SignatureAlgorithm.HS256, "secretKey").compact(); // HMAC SHA 256 Algorithm Used.
+			
+		return crewToken;
+	}
 }

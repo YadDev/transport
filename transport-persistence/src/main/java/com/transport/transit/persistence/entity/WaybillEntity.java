@@ -21,7 +21,7 @@ public class WaybillEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="waybill_id")
-	private String waybillId;
+	private BigInteger waybillId;
 
 	@Column(name="actual_km")
 	private BigDecimal actualKm;
@@ -36,9 +36,8 @@ public class WaybillEntity implements Serializable {
 	@Column(name="cash_dep_time")
 	private Date cashDepTime;
 
-	@Temporal(TemporalType.DATE)
 	@Column(name="duty_date")
-	private Date dutyDate;
+	private String dutyDate;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="duty_gen_time")
@@ -104,11 +103,11 @@ public class WaybillEntity implements Serializable {
 	public WaybillEntity() {
 	}
 
-	public String getWaybillId() {
+	public BigInteger getWaybillId() {
 		return this.waybillId;
 	}
 
-	public void setWaybillId(String waybillId) {
+	public void setWaybillId(BigInteger waybillId) {
 		this.waybillId = waybillId;
 	}
 
@@ -144,11 +143,11 @@ public class WaybillEntity implements Serializable {
 		this.cashDepTime = cashDepTime;
 	}
 
-	public Date getDutyDate() {
+	public String getDutyDate() {
 		return this.dutyDate;
 	}
 
-	public void setDutyDate(Date dutyDate) {
+	public void setDutyDate(String dutyDate) {
 		this.dutyDate = dutyDate;
 	}
 

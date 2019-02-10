@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.transport.transit.admin.config.JwtFilter;
+import com.transport.transit.admin.config.AdminJwtFilter;
 
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = { "com.transport.transit" })
@@ -22,10 +22,10 @@ public class AdminBootStarter {
 	}
 	
 	@Bean
-	public FilterRegistrationBean<JwtFilter> jwtFilter() {
-		final FilterRegistrationBean<JwtFilter> registrationBean = new FilterRegistrationBean<JwtFilter>();
-		registrationBean.setFilter(new JwtFilter());
-		registrationBean.addUrlPatterns("/secure/*");
+	public FilterRegistrationBean<AdminJwtFilter> jwtFilter() {
+		final FilterRegistrationBean<AdminJwtFilter> registrationBean = new FilterRegistrationBean<AdminJwtFilter>();
+		registrationBean.setFilter(new AdminJwtFilter());
+		registrationBean.addUrlPatterns("/admin/*");
 		return registrationBean;
 	}
 }

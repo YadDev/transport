@@ -7,7 +7,7 @@
 	</configSuffixes>
 	<enableImports><![CDATA[false]]></enableImports>
 	<configs>
-		<config>java:com.transport.transit.etm.ETMBootStarter</config>
+		<config>java:com.transport.transit.etim.ETIMBootStarter</config>
 	</configs>
 	<autoconfigs>
 	</autoconfigs>

@@ -7,5 +7,5 @@ import com.transport.transit.persistence.entity.UserEntity;
 
 @Repository
 public interface LoginRepository extends JpaRepository<UserEntity, Long> {
-	public UserEntity findByUserName(String userName);
+	public UserEntity findByUserCode(String userName);
 }
